@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Your Shop - Way4Shop</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #111; color: white; padding: 15px; }
+        .form-box { max-width: 450px; margin: auto; background: #222; padding: 20px; border: 2px solid gold; border-radius: 10px; }
+        h2 { text-align: center; color: gold; margin-top: 0; }
+        label { display: block; margin-top: 12px; font-weight: bold; font-size: 14px; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #555; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 14px; background: red; color: white; font-size: 18px; font-weight: bold; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer; }
+        #resultBox { display: none; margin-top: 20px; padding: 15px; background: #004d00; border: 2px solid #00ff00; border-radius: 8px; text-align: center; }
+        #resultBox a { color: yellow; font-size: 18px; font-weight: bold; word-break: break-all; }
+    </style>
+</head>
+<body>
+
+<div class="form-box">
+    <h2>మీ షాప్ వెబ్‌సైట్ క్రియేట్ చేసుకోండి</h2>
+    
+    <form id="shopForm">
+        <label>షాప్ పేరు (Shop Name - English లో):</label>
+        <input type="text" id="shopName" placeholder="ఉదా: Sri Sai Textiles" required>
+
+        <label>షాప్ ప్రత్యేకత (Tagline / Address):</label>
+        <input type="text" id="tagline" placeholder="ఉదా: Wholesale Cloth Merchants, Hyderabad" required>
+
+        <label>ఫోన్ నంబర్ (Call Now కోసం):</label>
+        <input type="tel" id="phone" placeholder="10 అంకెల మొబైల్ నంబర్" required>
+
+        <label>వాట్సాప్ నంబర్ (91 తో కలిపి):</label>
+        <input type="tel" id="whatsapp" placeholder="ఉదా: 919848012345" required>
+
+        <label>YouTube Video ID (ఉంటే):</label>
+        <input type="text" id="youtubeId" placeholder="ఉదా: gwPbRdnGv3Y">
+
+        <label>Google Maps Location Link:</label>
+        <input type="url" id="locationUrl" placeholder="https://maps.google.com/...">
+
+        <label>వెబ్‌సైట్ డిజైన్ ఎంచుకోండి (1 నుండి 6):</label>
+        <select id="design">
+            <option value="1">Design 1 (Red & Black Classic)</option>
+            <option value="2">Design 2 (Royal Blue)</option>
+            <option value="3">Design 3 (Emerald Green)</option>
+            <option value="4">Design 4 (Golden Luxury)</option>
+            <option value="5">Design 5 (Modern Dark)</option>
+            <option value="6">Design 6 (Bright Orange)</option>
+        </select>
+
+        <label>నామమాత్రపు నిర్వహణ రుసుము (Pay Amount): ₹99</label>
+
+        <button type="submit" id="submitBtn">వెబ్‌సైట్ తయారు చేయండి (Submit)</button>
+    </form>
+
+    <div id="resultBox">
+        <p style="margin:0 0 10px 0; font-size:16px;">🎉 అభినందనలు! మీ షాప్ వెబ్‌సైట్ సిద్ధమైంది:</p>
+        <a id="generatedLink" href="#" target="_blank"></a>
+    </div>
+</div>
+
+<script>
+    // ఇక్కడ మీ Google Apps Script Web App URL పేస్ట్ చేయండి
+    const SCRIPT_URL = "మీ_APPS_SCRIPT_WEB_APP_URL_ఇక్కడ_పెట్టండి";
+
+    document.getElementById("shopForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        var btn = document.getElementById("submitBtn");
+        btn.innerText = "దయచేసి వేచి ఉండండి...";
+        btn.disabled = true;
+
+        var payload = {
+            shopName: document.getElementById("shopName").value,
+            tagline: document.getElementById("tagline").value,
+            phone: document.getElementById("phone").value,
+            whatsapp: document.getElementById("whatsapp").value,
+            youtubeId: document.getElementById("youtubeId").value || "gwPbRdnGv3Y",
+            locationUrl: document.getElementById("locationUrl").value || "https://goo.gl/maps/",
+            design: document.getElementById("design").value
+        };
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === "success") {
+                document.getElementById("shopForm").style.display = "none";
+                document.getElementById("resultBox").style.display = "block";
+                var linkEl = document.getElementById("generatedLink");
+                linkEl.href = data.shopUrl;
+                linkEl.innerText = data.shopUrl;
+            }
+        })
+        .catch(err => {
+            alert("ఏదో పొరపాటు జరిగింది, మళ్ళీ ప్రయత్నించండి.");
+            btn.innerText = "వెబ్‌సైట్ తయారు చేయండి (Submit)";
+            btn.disabled = false;
+        });
+    });
+</script>
+
+</body>
+</html>
